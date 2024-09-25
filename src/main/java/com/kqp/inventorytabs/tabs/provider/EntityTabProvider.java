@@ -8,6 +8,7 @@ import com.kqp.inventorytabs.util.EntityUtil;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,7 +18,7 @@ public abstract class EntityTabProvider implements TabProvider {
     @Override
     public void addAvailableTabs(AbstractClientPlayer player, List<Tab> tabs) {
         Level level = player.level;
-        var reach = player.getBlockReach();
+        double reach = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
         List<Entity> entityList = level.getEntities(player, EntityUtil.aabbFromPlayer(player, reach));
 
         for (Entity entity : entityList) {

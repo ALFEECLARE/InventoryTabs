@@ -1,21 +1,22 @@
 package com.kqp.inventorytabs.tabs.provider;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.kqp.inventorytabs.tabs.tab.SimpleBlockTab;
 import com.kqp.inventorytabs.tabs.tab.Tab;
+
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 public class LecternTabProvider extends BlockTabProvider {
@@ -24,7 +25,7 @@ public class LecternTabProvider extends BlockTabProvider {
         super.addAvailableTabs(player, tabs);
         Set<SimpleBlockTab> tabsToRemove = new HashSet<>();
         List<SimpleBlockTab> lecternTabs = tabs.stream().filter(tab -> tab instanceof SimpleBlockTab).map(tab -> (SimpleBlockTab) tab)
-                .filter(tab -> tab.blockId == ForgeRegistries.BLOCKS.getKey(Blocks.LECTERN)).collect(Collectors.toList());
+                .filter(tab -> tab.blockId == BuiltInRegistries.BLOCK.getKey(Blocks.LECTERN)).collect(Collectors.toList());
         lecternTabs.stream().filter(tab -> {
             BlockEntity blockEntity = player.level.getBlockEntity(tab.blockPos);
 

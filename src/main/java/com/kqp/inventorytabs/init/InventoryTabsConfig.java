@@ -1,20 +1,20 @@
 package com.kqp.inventorytabs.init;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 public class InventoryTabsConfig {
 
-    public static ForgeConfigSpec.BooleanValue doSightChecksFlag;
-    public static ForgeConfigSpec.BooleanValue rotatePlayer;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> excludeTab;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> includeTab;
-    public static ForgeConfigSpec.BooleanValue renderTabs;
-    public static ForgeConfigSpec.BooleanValue debugEnabled;
+    public static ModConfigSpec.BooleanValue doSightChecksFlag;
+    public static ModConfigSpec.BooleanValue rotatePlayer;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> excludeTab;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> includeTab;
+    public static ModConfigSpec.BooleanValue renderTabs;
+    public static ModConfigSpec.BooleanValue debugEnabled;
 
-    public static void setupConfig(ForgeConfigSpec.Builder builder) {
+    public static void setupConfig(ModConfigSpec.Builder builder) {
         builder.push("Client");
 
         doSightChecksFlag = builder.define("doSightChecksFlag", () -> true);

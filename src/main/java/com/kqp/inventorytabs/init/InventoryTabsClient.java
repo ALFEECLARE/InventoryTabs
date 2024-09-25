@@ -10,12 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class InventoryTabsClient {
     public static final KeyMapping NEXT_TAB_KEY_BIND = new KeyMapping(
@@ -26,12 +27,12 @@ public class InventoryTabsClient {
 
     public static boolean serverDoSightCheckFlag = true;
 
-    static void init() {
+    static void init(IEventBus modEventBus, ModContainer modContainer) {
         // Handle state of tab managerInventoryTabsClient
-        MinecraftForge.EVENT_BUS.addListener(InventoryTabsClient::onWorldLoad);
-        MinecraftForge.EVENT_BUS.addListener(InventoryTabsClient::onKeyPressed);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(InventoryTabsClient::onRegisterKeyMappings);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(InventoryTabsClient::onReloadAssets);
+        NeoForge.EVENT_BUS.addListener(InventoryTabsClient::onWorldLoad);
+        NeoForge.EVENT_BUS.addListener(InventoryTabsClient::onKeyPressed);
+        modEventBus.addListener(InventoryTabsClient::onRegisterKeyMappings);
+        modEventBus.addListener(InventoryTabsClient::onReloadAssets);
     }
 
     private static void onReloadAssets(RegisterClientReloadListenersEvent event) {

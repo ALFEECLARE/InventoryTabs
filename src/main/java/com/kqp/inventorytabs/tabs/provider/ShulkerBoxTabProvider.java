@@ -1,21 +1,22 @@
 package com.kqp.inventorytabs.tabs.provider;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.kqp.inventorytabs.mixin.ShulkerBoxBlockInvoker;
 import com.kqp.inventorytabs.tabs.tab.SimpleBlockTab;
 import com.kqp.inventorytabs.tabs.tab.Tab;
+
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Provides tabs for shulker boxes. Takes into account if it's blocked.
@@ -29,7 +30,7 @@ public class ShulkerBoxTabProvider extends BlockTabProvider {
 
         List<SimpleBlockTab> shulkerTabs = tabs.stream().filter(tab -> tab instanceof SimpleBlockTab)
                 .map(tab -> (SimpleBlockTab) tab)
-                .filter(tab -> ForgeRegistries.BLOCKS.getValue(tab.blockId) instanceof ShulkerBoxBlock).collect(Collectors.toList());
+                .filter(tab -> BuiltInRegistries.BLOCK.get(tab.blockId) instanceof ShulkerBoxBlock).collect(Collectors.toList());
 
         // Add any chests that are blocked
         shulkerTabs.stream().filter(tab -> {
@@ -54,6 +55,6 @@ public class ShulkerBoxTabProvider extends BlockTabProvider {
 
     @Override
     public Tab createTab(Level world, BlockPos pos) {
-        return new SimpleBlockTab(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()), pos);
+        return new SimpleBlockTab(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()), pos);
     }
 }

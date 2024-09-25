@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
 import com.kqp.inventorytabs.init.InventoryTabsClient;
 import com.kqp.inventorytabs.interf.TabManagerContainer;
 import com.kqp.inventorytabs.tabs.TabManager;
@@ -13,13 +12,13 @@ import com.kqp.inventorytabs.tabs.TabManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(LoomScreen.class)
 public class LoomScreenTabAdder {
-    @Inject(method = "renderBg", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/gui/screens/inventory/LoomScreen;renderBackground(Lnet/minecraft/client/gui/GuiGraphics;)V"))
+    @Inject(method = "renderBg", at = @At(value = "HEAD"))
     protected void drawBackgroundTabs(GuiGraphics gui, float delta, int mouseX, int mouseY,
                                       CallbackInfo callbackInfo) {
         if (InventoryTabsClient.shouldRenderTabs((LoomScreen)(Object)this)) {

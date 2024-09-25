@@ -2,7 +2,6 @@ package com.kqp.inventorytabs.tabs.tab;
 
 import java.util.Objects;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
 import com.kqp.inventorytabs.init.InventoryTabsConfig;
 import com.kqp.inventorytabs.tabs.provider.BlockTabProvider;
 import com.kqp.inventorytabs.util.BlockUtil;
@@ -12,6 +11,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Generic tab for blocks.
@@ -62,7 +61,7 @@ public class SimpleBlockTab extends Tab {
     public boolean shouldBeRemoved() {
         AbstractClientPlayer player = Minecraft.getInstance().player;
 
-        if (!Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level.getBlockState(blockPos).getBlock()), blockId)) {
+        if (!Objects.equals(BuiltInRegistries.BLOCK.getKey(player.level.getBlockState(blockPos).getBlock()), blockId)) {
             return true;
         }
 
@@ -87,10 +86,10 @@ public class SimpleBlockTab extends Tab {
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
         if (blockEntity != null) {
-            CompoundTag tag = blockEntity.saveWithoutMetadata();
+            CompoundTag tag = blockEntity.saveWithoutMetadata(world.registryAccess());
 
             if (tag.contains("CustomName", Tag.TAG_STRING)) {
-                return Component.Serializer.fromJson(tag.getString("CustomName"));
+                return Component.Serializer.fromJson(tag.getString("CustomName"),world.registryAccess());
             }
         }
 

@@ -1,17 +1,18 @@
 package com.kqp.inventorytabs.tabs.provider;
 
-import com.kqp.inventorytabs.tabs.tab.InventoryTab;
-import com.kqp.inventorytabs.tabs.tab.Tab;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.kqp.inventorytabs.tabs.tab.InventoryTab;
+import com.kqp.inventorytabs.tabs.tab.Tab;
+
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class InventoryTabProvider implements TabProvider {
     private static final Set<ResourceLocation> inventoryItems = new HashSet<>();
@@ -38,7 +39,7 @@ public class InventoryTabProvider implements TabProvider {
     }
 
     public static Set<Item> getItems() {
-        return inventoryItems.stream().map(ForgeRegistries.ITEMS::getValue).collect(Collectors.toSet());
+        return inventoryItems.stream().map(BuiltInRegistries.ITEM::get).collect(Collectors.toSet());
     }
 
 }

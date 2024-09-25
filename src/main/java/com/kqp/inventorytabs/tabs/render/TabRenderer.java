@@ -15,15 +15,27 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Handles the rendering of tabs.
  */
 @OnlyIn(Dist.CLIENT)
 public class TabRenderer {
-    private static final ResourceLocation TABS_TEXTURE = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
+    private static final ResourceLocation TABS_TEXTURE_FOR_SHADER = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/creative_inventory/tab_top_selected_1.png");
+    private static final ResourceLocation TABS_TOP_LEFT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_1");
+    private static final ResourceLocation TABS_TOP_MIDDLE_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_4");
+    private static final ResourceLocation TABS_TOP_RIGHT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_7");
+    private static final ResourceLocation TABS_BOTTOM_LEFT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_1");
+    private static final ResourceLocation TABS_BOTTOM_MIDDLE_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_4");
+    private static final ResourceLocation TABS_BOTTOM_RIGHT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_7");
+    private static final ResourceLocation TABS_TOP_LEFT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_1");
+    private static final ResourceLocation TABS_TOP_MIDDLE_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_4");
+    private static final ResourceLocation TABS_TOP_RIGHT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_7");
+    private static final ResourceLocation TABS_BOTTOM_LEFT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_1");
+    private static final ResourceLocation TABS_BOTTOM_MIDDLE_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_4");
+    private static final ResourceLocation TABS_BOTTOM_RIGHT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_7");
     private static final ResourceLocation BUTTONS_TEXTURE = InventoryTabs.id("textures/gui/buttons.png");
 
     public static final int TAB_WIDTH = 26;
@@ -59,7 +71,7 @@ public class TabRenderer {
     }
 
     public void renderForeground(GuiGraphics gui, double mouseX, double mouseY) {
-        RenderSystem.setShaderTexture(0, TABS_TEXTURE);
+        RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
 
         for (int i = 0; i < tabRenderInfos.length; i++) {
             TabRenderInfo tabRenderInfo = tabRenderInfos[i];
@@ -144,9 +156,8 @@ public class TabRenderer {
     private void renderTab(GuiGraphics gui, TabRenderInfo tabRenderInfo) {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
-        RenderSystem.setShaderTexture(0, TABS_TEXTURE);
-        gui.blit(TABS_TEXTURE, tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texU, tabRenderInfo.texV,
-                tabRenderInfo.texW, tabRenderInfo.texH);
+        RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
+        gui.blitSprite(getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
 
         tabRenderInfo.tabReference.renderTabIcon(gui, tabRenderInfo, currentScreen);
     }
@@ -191,27 +202,28 @@ public class TabRenderer {
             if (startingIndex + i < tabManager.tabs.size()) {
                 // Setup basic info
                 Tab tab = tabManager.tabs.get(startingIndex + i);
-                boolean topRow = i < maxRowLength;
-                if(isPlayerExLoaded) {
-                    topRow = i < maxRowLength - 3;
-                } else if(isLevelzLoaded) {
-                    topRow = i < maxRowLength - 2;
-                }
-                boolean selected = tab == tabManager.currentTab;
 
                 // Create tab info object
                 TabRenderInfo tabInfo = new TabRenderInfo();
+                tabInfo.topRow = (i < maxRowLength);
+                if(isPlayerExLoaded) {
+                	tabInfo.topRow = i < maxRowLength - 3;
+                } else if(isLevelzLoaded) {
+                	tabInfo.topRow = i < maxRowLength - 2;
+                }
+
+                tabInfo.selected = (tab == tabManager.currentTab);
                 tabInfo.tabReference = tab;
                 tabInfo.index = startingIndex + i;
 
                 // Calc x value
                 tabInfo.x = x + i * (TAB_WIDTH + 1);
-                if (!topRow) {
+                if (!tabInfo.topRow) {
                     tabInfo.x -= maxRowLength * (TAB_WIDTH + 1);
                 }
 
                 // Calc y value
-                if (topRow) {
+                if (tabInfo.topRow) {
                     tabInfo.y = y - 28;
                 } else {
                     if(isBigInvLoaded) {
@@ -225,22 +237,26 @@ public class TabRenderer {
                 tabInfo.texW = 26;
                 tabInfo.texH = 32;
 
-                // Calc texture U
+                // Calc texture U ※旧処理も残す
                 if (i == 0 || i == maxRowLength) {
                     tabInfo.texU = 0;
                 } else {
                     tabInfo.texU = 26;
                 }
-
-                // Calc texture V
-                if (topRow) {
-                    if (selected) {
+                
+                if (i == 0)            {tabInfo.renderPattern = TabRenderInfo.RenderTabType.LEFT; } else
+                if (i == maxRowLength) {tabInfo.renderPattern = TabRenderInfo.RenderTabType.RIGHT; }
+                else                   {tabInfo.renderPattern = TabRenderInfo.RenderTabType.MIDDLE; };
+                
+                // Calc texture V ※旧処理
+                if (tabInfo.topRow) {
+                    if (tabInfo.selected) {
                         tabInfo.texV = 32;
                     } else {
                         tabInfo.texV = 0;
                     }
                 } else {
-                    if (selected) {
+                    if (tabInfo.selected) {
                         tabInfo.texV = 96;
                     } else {
                         tabInfo.texV = 64;
@@ -248,7 +264,7 @@ public class TabRenderer {
                 }
 
                 // Calc item position
-                if (topRow) {
+                if (tabInfo.topRow) {
                     tabInfo.itemX = tabInfo.x + 6;
                     tabInfo.itemY = tabInfo.y + 8;
                 } else {
@@ -258,7 +274,7 @@ public class TabRenderer {
 
                 // Apply rendering hints
                 if (currentScreen instanceof TabRenderingHints) {
-                    if (topRow) {
+                    if (tabInfo.topRow) {
                         if(isPlayerExLoaded) {
                             tabInfo.x += ((TabRenderingHints) currentScreen).getTopRowXOffset() + 87;
                             tabInfo.itemX += ((TabRenderingHints) currentScreen).getTopRowXOffset() + 87;
@@ -295,6 +311,42 @@ public class TabRenderer {
         }
 
         return tabRenderInfo;
+    }
+    
+    private ResourceLocation getRendarTabTexture(TabRenderInfo renderinfo) {
+    	if (renderinfo.selected) {
+        	if (renderinfo.topRow) {
+        		return switch(renderinfo.renderPattern) {
+        			case TabRenderInfo.RenderTabType.LEFT   -> TABS_TOP_LEFT_SELECTED_TEXTURE;
+        			case TabRenderInfo.RenderTabType.MIDDLE -> TABS_TOP_MIDDLE_SELECTED_TEXTURE;
+        			case TabRenderInfo.RenderTabType.RIGHT  -> TABS_TOP_RIGHT_SELECTED_TEXTURE;
+        			default                                 -> null;
+        		};
+        	} else {
+        		return switch(renderinfo.renderPattern) {
+	    			case TabRenderInfo.RenderTabType.LEFT   -> TABS_BOTTOM_LEFT_SELECTED_TEXTURE;
+	    			case TabRenderInfo.RenderTabType.MIDDLE -> TABS_BOTTOM_MIDDLE_SELECTED_TEXTURE;
+	    			case TabRenderInfo.RenderTabType.RIGHT  -> TABS_BOTTOM_RIGHT_SELECTED_TEXTURE;
+	    			default                                 -> null;
+	    		};
+        	}
+    	} else {
+        	if (renderinfo.topRow) {
+        		return switch(renderinfo.renderPattern) {
+        			case TabRenderInfo.RenderTabType.LEFT   -> TABS_TOP_LEFT_UNSELECTED_TEXTURE;
+        			case TabRenderInfo.RenderTabType.MIDDLE -> TABS_TOP_MIDDLE_UNSELECTED_TEXTURE;
+        			case TabRenderInfo.RenderTabType.RIGHT  -> TABS_TOP_RIGHT_UNSELECTED_TEXTURE;
+        			default                                 -> null;
+        		};
+        	} else {
+        		return switch(renderinfo.renderPattern) {
+	    			case TabRenderInfo.RenderTabType.LEFT   -> TABS_BOTTOM_LEFT_UNSELECTED_TEXTURE;
+	    			case TabRenderInfo.RenderTabType.MIDDLE -> TABS_BOTTOM_MIDDLE_UNSELECTED_TEXTURE;
+	    			case TabRenderInfo.RenderTabType.RIGHT  -> TABS_BOTTOM_RIGHT_UNSELECTED_TEXTURE;
+	    			default                                 -> null;
+	    		};
+        	}
+    	}
     }
 
     public void update() {

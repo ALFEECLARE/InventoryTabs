@@ -1,18 +1,19 @@
 package com.kqp.inventorytabs.tabs.provider;
 
-import com.kqp.inventorytabs.tabs.tab.ChestTab;
-import com.kqp.inventorytabs.tabs.tab.Tab;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.kqp.inventorytabs.tabs.tab.ChestTab;
+import com.kqp.inventorytabs.tabs.tab.Tab;
+
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
 
 /**
  * Provides tabs for ender chests. Limits amount of ender chest tabs to only one
@@ -26,7 +27,7 @@ public class EnderChestTabProvider extends BlockTabProvider {
         Set<ChestTab> tabsToRemove = new HashSet<>();
 
         List<ChestTab> chestTabs = tabs.stream().filter(tab -> tab instanceof ChestTab).map(tab -> (ChestTab) tab)
-                .filter(tab -> tab.blockId == ForgeRegistries.BLOCKS.getKey(Blocks.ENDER_CHEST)).collect(Collectors.toList());
+                .filter(tab -> tab.blockId == BuiltInRegistries.BLOCK.getKey(Blocks.ENDER_CHEST)).collect(Collectors.toList());
 
         Level world = player.level;
 
@@ -55,6 +56,6 @@ public class EnderChestTabProvider extends BlockTabProvider {
 
     @Override
     public Tab createTab(Level world, BlockPos pos) {
-        return new ChestTab(ForgeRegistries.BLOCKS.getKey(Blocks.ENDER_CHEST), pos);
+        return new ChestTab(BuiltInRegistries.BLOCK.getKey(Blocks.ENDER_CHEST), pos);
     }
 }

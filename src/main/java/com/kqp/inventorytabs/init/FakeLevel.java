@@ -5,10 +5,10 @@ import java.util.UUID;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,9 +20,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
@@ -33,14 +35,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LightChunk;
 import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.phys.AABB;
@@ -52,7 +55,7 @@ import net.minecraft.world.ticks.ScheduledTick;
 public class FakeLevel extends Level implements LightChunkGetter {
 
     public FakeLevel() {
-        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, new ResourceLocation("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), () -> Minecraft.getInstance().getProfiler(), true, false, 91247917248L, 0);
+        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, ResourceLocation.withDefaultNamespace("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), () -> Minecraft.getInstance().getProfiler(), true, false, 91247917248L, 0);
     }
 
     @Override
@@ -89,18 +92,18 @@ public class FakeLevel extends Level implements LightChunkGetter {
 
     @Nullable
     @Override
-    public MapItemSavedData getMapData(String pMapName) {
+    public MapItemSavedData getMapData(MapId pMapName) {
         return null;
     }
 
     @Override
-    public void setMapData(String pMapId, MapItemSavedData pData) {
+    public void setMapData(MapId pMapId, MapItemSavedData pData) {
 
     }
 
     @Override
-    public int getFreeMapId() {
-        return 0;
+    public MapId getFreeMapId() {
+        return new MapId(0);
     }
 
     @Override
@@ -117,7 +120,7 @@ public class FakeLevel extends Level implements LightChunkGetter {
     @NotNull
     @Override
     public RecipeManager getRecipeManager() {
-        return new RecipeManager();
+        return new RecipeManager(null);
     }
 
     @NotNull
@@ -256,8 +259,10 @@ public class FakeLevel extends Level implements LightChunkGetter {
 
     }
 
+    //gameEvent(@Nullable Entity pEntity, Holder<GameEvent> pGameEvent, Vec3 pPos) {
+
     @Override
-    public void gameEvent(@NotNull GameEvent pEvent, @NotNull Vec3 pPosition, @NotNull GameEvent.Context pContext) {
+    public void gameEvent(@NotNull Holder<GameEvent> pEvent, @NotNull Vec3 pPosition, @NotNull GameEvent.Context pContext) {
 
     }
 
@@ -304,36 +309,13 @@ public class FakeLevel extends Level implements LightChunkGetter {
 
     static class FakeWritableLevelData implements WritableLevelData {
 
-        @Override
-        public void setXSpawn(int pXSpawn) {
-        }
+    	@Override
+    	public void setSpawn(BlockPos pSpawnPoint, float pSpawnAngle) {
+    	}
 
-        @Override
-        public void setYSpawn(int pYSpawn) {
-        }
-
-        @Override
-        public void setZSpawn(int pZSpawn) {
-        }
-
-        @Override
-        public void setSpawnAngle(float pSpawnAngle) {
-        }
-
-        @Override
-        public int getXSpawn() {
-            return 0;
-        }
-
-        @Override
-        public int getYSpawn() {
-            return 0;
-        }
-
-        @Override
-        public int getZSpawn() {
-            return 0;
-        }
+    	public BlockPos getSpawnPos() {
+    		return new BlockPos(0,0,0);
+    	}
 
         @Override
         public float getSpawnAngle() {
@@ -386,4 +368,40 @@ public class FakeLevel extends Level implements LightChunkGetter {
             return false;
         }
     }
+
+	@Override
+	public TickRateManager tickRateManager() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public PotionBrewing potionBrewing() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public void setDayTimeFraction(float dayTimeFraction) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	@Override
+	public float getDayTimeFraction() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public float getDayTimePerTick() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public void setDayTimePerTick(float dayTimePerTick) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
 }

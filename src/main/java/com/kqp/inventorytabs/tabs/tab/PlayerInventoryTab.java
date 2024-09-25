@@ -1,11 +1,11 @@
 package com.kqp.inventorytabs.tabs.tab;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Blocks;
 
 /**
@@ -48,9 +48,7 @@ public class PlayerInventoryTab extends Tab {
 
     private static ItemStack getRenderItemStack() {
         ItemStack itemStack = new ItemStack(Blocks.PLAYER_HEAD);
-        itemStack.getOrCreateTag().putString("SkullOwner",
-        		Minecraft.getInstance().player.getGameProfile().getName());
-
+        itemStack.set(DataComponents.PROFILE, new ResolvableProfile(Minecraft.getInstance().player.getGameProfile()));
         return itemStack;
     }
 }

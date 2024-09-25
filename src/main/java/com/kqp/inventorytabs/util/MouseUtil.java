@@ -2,15 +2,14 @@ package com.kqp.inventorytabs.util;
 
 import java.nio.DoubleBuffer;
 
-import net.minecraft.client.Minecraft;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
 import com.mojang.blaze3d.platform.InputConstants;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Utility class for manipulating the client's mouse position.

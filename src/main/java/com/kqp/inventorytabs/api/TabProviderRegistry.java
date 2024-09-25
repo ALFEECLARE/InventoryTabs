@@ -28,11 +28,13 @@ import com.kqp.inventorytabs.tabs.tab.RidableInventoryTab;
 import com.kqp.inventorytabs.tabs.tab.VillagerTab;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.piglin.Piglin;
@@ -68,7 +70,6 @@ import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.StonecutterBlock;
 import net.minecraft.world.level.block.StructureBlock;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Registry for tab providers.
@@ -113,7 +114,7 @@ public class TabProviderRegistry {
                 blockSet.add(overrideEntry);
             }
         }
-        ForgeRegistries.BLOCKS.forEach(block -> {
+        BuiltInRegistries.BLOCK.forEach(block -> {
             if (block instanceof EntityBlock) {
                 if (block instanceof AbstractChestBlock) {
                     registerChest(block);
@@ -128,15 +129,15 @@ public class TabProviderRegistry {
         configRemove(blockSet);
         configAdd();
         var fakeLevel = new FakeLevel();
-        ForgeRegistries.ENTITY_TYPES.forEach(entityType -> {
+        BuiltInRegistries.ENTITY_TYPE.stream().filter(entityType -> !islllegalEntity(entityType)).forEach(entityType -> {
             var entity = entityType.create(fakeLevel);
             if (entity instanceof Container || entity instanceof InventoryCarrier || entity instanceof ContainerListener) {
                 if (entity instanceof Villager) {
-                    registerEntity(ForgeRegistries.ENTITY_TYPES.getKey(entityType), VillagerTab::new);
+                    registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), VillagerTab::new);
                 } else if (entity instanceof AbstractHorse || entity instanceof ChestBoat) {
-                    registerEntity(ForgeRegistries.ENTITY_TYPES.getKey(entityType), RidableInventoryTab::new);
+                    registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), RidableInventoryTab::new);
                 } else if (!(entity instanceof Piglin) && !(entity instanceof Allay)) {
-                    registerSimpleEntity(ForgeRegistries.ENTITY_TYPES.getKey(entityType));
+                    registerSimpleEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
                 }
             }
         });
@@ -147,15 +148,19 @@ public class TabProviderRegistry {
         LOGGER.info(configMsg.equals("save") ? "InventoryTabs: Config saved!": "InventoryTabs: Config %sed!".formatted(configMsg));
     }
 
+    private static boolean islllegalEntity(EntityType entityType) {
+    	return entityType.equals(EntityType.PAINTING) || entityType.equals(EntityType.WOLF);
+    }
+    
     private static void modCompatAdd() {
-        registerInventoryTab(new ResourceLocation("onastick", "crafting_table_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "smithing_table_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "cartography_table_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "anvil_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "loom_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "grindstone_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("onastick", "stonecutter_on_a_stick"));
-        registerInventoryTab(new ResourceLocation("craftingpad", "craftingpad"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "crafting_table_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "smithing_table_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "cartography_table_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "anvil_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "loom_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "grindstone_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("onastick", "stonecutter_on_a_stick"));
+        registerInventoryTab(ResourceLocation.fromNamespaceAndPath("craftingpad", "craftingpad"));
     }
 
     public static boolean isValid(String overrideEntry, String[] splitEntry, Set<String> invalidSet) {
@@ -170,14 +175,14 @@ public class TabProviderRegistry {
             if (InventoryTabsConfig.debugEnabled.get()) {
                 LOGGER.info("Excluding: %s".formatted(overrideEntry));
             }
-            removeSimpleBlock(new ResourceLocation(overrideEntry));
+            removeSimpleBlock(ResourceLocation.parse(overrideEntry));
         }
     }
     private static void configRemove(Block block, Set<String> tagSet, Set<String> invalidSet) {
         for (String overrideEntry : tagSet) {
             String[] splitEntry = overrideEntry.split(":"); // split into two parts: namespace, id
             if (isValid(overrideEntry, splitEntry, invalidSet)) {
-                if (block.defaultBlockState().is(TagKey.create(Registries.BLOCK, new ResourceLocation(splitEntry[0], splitEntry[1])))) {
+                if (block.defaultBlockState().is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(splitEntry[0], splitEntry[1])))) {
                     removeSimpleBlock(block);
                     if (InventoryTabsConfig.debugEnabled.get()) {
                         LOGGER.info("Excluding: %s".formatted(block));
@@ -192,7 +197,7 @@ public class TabProviderRegistry {
             if (InventoryTabsConfig.debugEnabled.get()) {
                 LOGGER.info("Including: %s".formatted(included_tab));
             }
-            registerSimpleBlock(new ResourceLocation(included_tab));
+            registerSimpleBlock(ResourceLocation.parse(included_tab));
         }
     }
     public static void registerInventoryTab(ResourceLocation itemId) {

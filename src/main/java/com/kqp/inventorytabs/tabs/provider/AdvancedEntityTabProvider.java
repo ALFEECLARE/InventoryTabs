@@ -1,13 +1,18 @@
 package com.kqp.inventorytabs.tabs.provider;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.kqp.inventorytabs.tabs.tab.SimpleEntityTab;
 import com.kqp.inventorytabs.tabs.tab.Tab;
+
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.*;
 
 public class AdvancedEntityTabProvider extends EntityTabProvider {
     private final Map<ResourceLocation, TabFactory> entityMap = new HashMap<>();
@@ -25,12 +30,12 @@ public class AdvancedEntityTabProvider extends EntityTabProvider {
 
     @Override
     public boolean matches(Entity entity) {
-        return entityMap.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+        return entityMap.containsKey(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
     }
 
     @Override
     public Tab createTab(Entity entity) {
-        return entityMap.get(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).createTab(entity);
+        return entityMap.get(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).createTab(entity);
     }
 
     public boolean addEntity(ResourceLocation key, TabFactory factory) {

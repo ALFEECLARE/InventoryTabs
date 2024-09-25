@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Tab for chests
@@ -32,7 +32,7 @@ public class ChestTab extends SimpleBlockTab {
 
     public ChestTab(ResourceLocation blockId, BlockPos blockPos) {
         super(blockId, blockPos);
-        this.itemStack = new ItemStack(ForgeRegistries.BLOCKS.getValue(blockId));
+        this.itemStack = new ItemStack(BuiltInRegistries.BLOCK.get(blockId));
     }
 
     @Override
@@ -48,10 +48,7 @@ public class ChestTab extends SimpleBlockTab {
 
     @Override
     public Component getHoverText() {
-        if (itemStack.hasCustomHoverName()) {
-            return itemStack.getHoverName();
-        }
-        return super.getHoverText();
+    	return itemStack.getHoverName();
     }
 
     @Override
@@ -68,7 +65,7 @@ public class ChestTab extends SimpleBlockTab {
     public ItemStack getItemFrame() {
         Level world = mc.level;
         BlockPos doubleChestPos = ChestUtil.isDouble(world, blockPos) ? getOtherChestBlockPos(world, blockPos) : blockPos;
-        AABB box = new AABB(blockPos, doubleChestPos);
+        AABB box = AABB.encapsulatingFullBlocks(blockPos, doubleChestPos);
         double x = box.minX;    double y = box.minY;    double z = box.minZ;
         double x1 = box.maxX;   double y1 = box.maxY;   double z1 = box.maxZ;
         List<ItemFrame> list1 = world.getEntitiesOfClass(ItemFrame.class, new AABB(x-0.8, y, z, x1+1.8, y1+0.8, z1+0.8));

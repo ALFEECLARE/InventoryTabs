@@ -1,20 +1,21 @@
 package com.kqp.inventorytabs.tabs.provider;
 
-import com.kqp.inventorytabs.tabs.tab.ChestTab;
-import com.kqp.inventorytabs.tabs.tab.Tab;
-import com.kqp.inventorytabs.util.ChestUtil;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.kqp.inventorytabs.tabs.tab.ChestTab;
+import com.kqp.inventorytabs.tabs.tab.Tab;
+import com.kqp.inventorytabs.util.ChestUtil;
+
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 
 /**
  * Provides tabs for chests. Limits double chests to having only one tab and
@@ -49,7 +50,7 @@ public class ChestTabProvider extends BlockTabProvider {
     }
 
     public void addChestBlock(Block block) {
-        chestBlocks.add(ForgeRegistries.BLOCKS.getKey(block));
+        chestBlocks.add(BuiltInRegistries.BLOCK.getKey(block));
     }
 
     public void addChestBlock(ResourceLocation blockId) {
@@ -68,11 +69,11 @@ public class ChestTabProvider extends BlockTabProvider {
     public boolean matches(Level world, BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
 
-        return chestBlocks.contains(ForgeRegistries.BLOCKS.getKey(block));
+        return chestBlocks.contains(BuiltInRegistries.BLOCK.getKey(block));
     }
 
     @Override
     public Tab createTab(Level world, BlockPos pos) {
-        return new ChestTab(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()), pos);
+        return new ChestTab(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()), pos);
     }
 }

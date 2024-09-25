@@ -2,7 +2,6 @@ package com.kqp.inventorytabs.tabs.tab;
 
 import java.util.Objects;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
 import com.kqp.inventorytabs.init.InventoryTabsConfig;
 import com.kqp.inventorytabs.util.EntityUtil;
 
@@ -12,9 +11,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class SimpleEntityTab extends Tab {
     public final ResourceLocation entityId;
@@ -39,12 +38,12 @@ public class SimpleEntityTab extends Tab {
         }
         var player = Minecraft.getInstance().player;
         if (InventoryTabsConfig.doSightChecksFlag.get()) {
-            if (!EntityUtil.canInteract(player, entity, player.getEntityReach())) {
+            if (!EntityUtil.canInteract(player, entity, player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue())) {
                 return true;
             }
         }
         // TODO: fix this, entities can interact with entities that are farther and this doesn't catch it
-        return entity.position().distanceTo(Minecraft.getInstance().player.position()) > player.getEntityReach();
+        return entity.position().distanceTo(Minecraft.getInstance().player.position()) > player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
     }
 
     @Override

@@ -1,16 +1,17 @@
 package com.kqp.inventorytabs.tabs.provider;
 
-import com.kqp.inventorytabs.tabs.tab.SimpleEntityTab;
-import com.kqp.inventorytabs.tabs.tab.Tab;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.kqp.inventorytabs.tabs.tab.SimpleEntityTab;
+import com.kqp.inventorytabs.tabs.tab.Tab;
+
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
 public class SimpleEntityTabProvider extends EntityTabProvider {
     private final Set<ResourceLocation> entityIds = new HashSet<>();
@@ -32,7 +33,7 @@ public class SimpleEntityTabProvider extends EntityTabProvider {
 
     @Override
     public boolean matches(Entity entity) {
-        return entityIds.contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+        return entityIds.contains(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
     }
 
     public void addEntity(ResourceLocation entityId) {

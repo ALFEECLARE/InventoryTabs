@@ -1,17 +1,18 @@
 package com.kqp.inventorytabs.tabs.provider;
 
-import com.kqp.inventorytabs.tabs.tab.SimpleBlockTab;
-import com.kqp.inventorytabs.tabs.tab.Tab;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.kqp.inventorytabs.tabs.tab.SimpleBlockTab;
+import com.kqp.inventorytabs.tabs.tab.Tab;
+
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Provides tabs for blocks that should only have one tab at a time (e.g. Crafting Tables).
@@ -34,7 +35,7 @@ public class UniqueTabProvider extends BlockTabProvider {
     }
 
     public void addUniqueBlock(Block block) {
-        uniqueBlocks.add(ForgeRegistries.BLOCKS.getKey(block));
+        uniqueBlocks.add(BuiltInRegistries.BLOCK.getKey(block));
     }
 
     public void addUniqueBlock(ResourceLocation blockId) {
@@ -46,11 +47,11 @@ public class UniqueTabProvider extends BlockTabProvider {
     }
     @Override
     public boolean matches(Level world, BlockPos pos) {
-        return uniqueBlocks.contains(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()));
+        return uniqueBlocks.contains(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()));
     }
 
     @Override
     public Tab createTab(Level world, BlockPos pos) {
-        return new SimpleBlockTab(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()), pos);
+        return new SimpleBlockTab(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()), pos);
     }
 }

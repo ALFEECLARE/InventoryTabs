@@ -2,17 +2,17 @@ package com.kqp.inventorytabs.init;
 
 import com.kqp.inventorytabs.api.TabProviderRegistry;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 @Mod(InventoryTabs.ID)
 public class InventoryTabs {
@@ -23,13 +23,13 @@ public class InventoryTabs {
     public static boolean isLevelzLoaded;
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(ID, path);
+        return ResourceLocation.fromNamespaceAndPath(ID, path);
     }
 
-    public InventoryTabs() {
-        var spec = new ForgeConfigSpec.Builder();
+    public InventoryTabs(IEventBus modEventBus, ModContainer modContainer) {
+        var spec = new ModConfigSpec.Builder();
         InventoryTabsConfig.setupConfig(spec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, spec.build());
+        modContainer.registerConfig(ModConfig.Type.CLIENT, spec.build());
 
         isBigInvLoaded = ModList.get().isLoaded("biginv");
         isPlayerExLoaded = ModList.get().isLoaded("playerex");
@@ -37,11 +37,11 @@ public class InventoryTabs {
         
         
 
-        MinecraftForge.EVENT_BUS.addListener(this::playerJoin);
-        MinecraftForge.EVENT_BUS.addListener(this::datapackReload);
+        NeoForge.EVENT_BUS.addListener(this::playerJoin);
+        NeoForge.EVENT_BUS.addListener(this::datapackReload);
 
         if (FMLLoader.getDist().isClient()) {
-            InventoryTabsClient.init();
+            InventoryTabsClient.init(modEventBus, modContainer);
         }
     }
 
