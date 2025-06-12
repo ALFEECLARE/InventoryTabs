@@ -39,7 +39,7 @@ public class InventoryTabProvider implements TabProvider {
     }
 
     public static Set<Item> getItems() {
-        return inventoryItems.stream().map(BuiltInRegistries.ITEM::get).collect(Collectors.toSet());
+        return inventoryItems.stream().map(BuiltInRegistries.ITEM::getValue).collect(Collectors.toSet());
     }
 
 }

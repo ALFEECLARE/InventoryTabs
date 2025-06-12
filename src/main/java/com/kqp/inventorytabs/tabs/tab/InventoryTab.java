@@ -1,7 +1,5 @@
 package com.kqp.inventorytabs.tabs.tab;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
@@ -39,6 +37,6 @@ public class InventoryTab extends Tab {
 
     @Override
     public Component getHoverText() {
-        return Component.literal(item.getDescription().getString());
+        return Component.literal(item.getName().getString());
     }
 }

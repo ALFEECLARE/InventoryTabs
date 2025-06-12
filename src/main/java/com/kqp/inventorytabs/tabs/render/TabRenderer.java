@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -107,7 +108,7 @@ public class TabRenderer {
         int u = 0;
         u += tabManager.canGoBackAPage() && hovered ? BUTTON_WIDTH * 2 : 0;
         int v = tabManager.canGoBackAPage() ? 0 : 13;
-        gui.blit(BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT);
+        gui.blit(RenderType.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
 
         // Drawing forward button
         x = oX + width + 4;
@@ -118,7 +119,7 @@ public class TabRenderer {
         u = 15;
         u += tabManager.canGoForwardAPage() && hovered ? BUTTON_WIDTH * 2 : 0;
         v = tabManager.canGoForwardAPage() ? 0 : 13;
-        gui.blit(BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT);
+        gui.blit(RenderType.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
     }
 
     private void drawPageText(GuiGraphics gui) {
@@ -157,7 +158,7 @@ public class TabRenderer {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
         RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
-        gui.blitSprite(getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
+        gui.blitSprite(RenderType.GUI_TEXTURED, getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
 
         tabRenderInfo.tabReference.renderTabIcon(gui, tabRenderInfo, currentScreen);
     }

@@ -36,7 +36,7 @@ public class InventoryTabsClient {
     }
 
     private static void onReloadAssets(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener((pPreparationBarrier, pResourceManager, pPreparationsProfiler, pReloadProfiler, pBackgroundExecutor, pGameExecutor) -> {
+        event.registerReloadListener((pPreparationBarrier, pResourceManager, pBackgroundExecutor, pGameExecutor) -> {
             return CompletableFuture.runAsync(InventoryTabsClient::reloadTabs, pGameExecutor).thenCompose(pPreparationBarrier::wait);
         });
     }

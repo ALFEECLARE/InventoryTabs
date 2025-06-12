@@ -32,7 +32,7 @@ public class ChestTab extends SimpleBlockTab {
 
     public ChestTab(ResourceLocation blockId, BlockPos blockPos) {
         super(blockId, blockPos);
-        this.itemStack = new ItemStack(BuiltInRegistries.BLOCK.get(blockId));
+        this.itemStack = new ItemStack(BuiltInRegistries.BLOCK.get(blockId).get().value());
     }
 
     @Override

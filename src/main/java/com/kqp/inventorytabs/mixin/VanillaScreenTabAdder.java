@@ -179,7 +179,7 @@ public abstract class VanillaScreenTabAdder extends Screen implements TabRenderi
         if (!IS_BRB_LOADED) {
             AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
             if (screen instanceof InventoryScreen) {
-                if (((InventoryScreen) screen).getRecipeBookComponent().isVisible()) {
+                if (((InventoryScreen) screen).recipeBookComponent.isVisible()) {
                     return 77;
                 }
             } else if (screen instanceof AbstractFurnaceScreen) {
@@ -187,7 +187,7 @@ public abstract class VanillaScreenTabAdder extends Screen implements TabRenderi
                     return 77;
                 }
             } else if (screen instanceof CraftingScreen) {
-                if (((CraftingScreen) screen).getRecipeBookComponent().isVisible()) {
+                if (((CraftingScreen) screen).recipeBookComponent.isVisible()) {
                     return 77;
                 }
             }

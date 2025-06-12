@@ -44,7 +44,7 @@ public class SimpleBlockTabProvider extends BlockTabProvider {
     }
 
     public Set<Block> getBlocks() {
-        return this.blockIds.stream().map(BuiltInRegistries.BLOCK::get).collect(Collectors.toSet());
+        return this.blockIds.stream().map(BuiltInRegistries.BLOCK::getValue).collect(Collectors.toSet());
     }
 
     @Override

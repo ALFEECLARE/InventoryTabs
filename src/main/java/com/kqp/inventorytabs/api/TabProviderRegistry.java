@@ -34,6 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -130,7 +131,7 @@ public class TabProviderRegistry {
         configAdd();
         var fakeLevel = new FakeLevel();
         BuiltInRegistries.ENTITY_TYPE.stream().filter(entityType -> !islllegalEntity(entityType)).forEach(entityType -> {
-            var entity = entityType.create(fakeLevel);
+            var entity = entityType.create(fakeLevel, EntitySpawnReason.NATURAL);
             if (entity instanceof Container || entity instanceof InventoryCarrier || entity instanceof ContainerListener) {
                 if (entity instanceof Villager) {
                     registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), VillagerTab::new);

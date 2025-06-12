@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -21,17 +22,19 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.TickRateManager;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeAccess;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
@@ -55,7 +58,7 @@ import net.minecraft.world.ticks.ScheduledTick;
 public class FakeLevel extends Level implements LightChunkGetter {
 
     public FakeLevel() {
-        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, ResourceLocation.withDefaultNamespace("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), () -> Minecraft.getInstance().getProfiler(), true, false, 91247917248L, 0);
+        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, ResourceLocation.withDefaultNamespace("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), true, false, 91247917248L, 0);
     }
 
     @Override
@@ -115,12 +118,6 @@ public class FakeLevel extends Level implements LightChunkGetter {
     @Override
     public Scoreboard getScoreboard() {
         return new Scoreboard();
-    }
-
-    @NotNull
-    @Override
-    public RecipeManager getRecipeManager() {
-        return new RecipeManager(null);
     }
 
     @NotNull
@@ -292,7 +289,7 @@ public class FakeLevel extends Level implements LightChunkGetter {
     @NotNull
     @Override
     public Holder<Biome> getUncachedNoiseBiome(int pX, int pY, int pZ) {
-        return registryAccess().registry(Registries.BIOME).get().getHolderOrThrow(Biomes.BADLANDS);
+        return registryAccess().lookup(Registries.BIOME).get().get(Biomes.BADLANDS).get();
     }
 
     @Nullable
@@ -353,12 +350,6 @@ public class FakeLevel extends Level implements LightChunkGetter {
 
         @NotNull
         @Override
-        public GameRules getGameRules() {
-            return new GameRules();
-        }
-
-        @NotNull
-        @Override
         public Difficulty getDifficulty() {
             return Difficulty.EASY;
         }
@@ -403,5 +394,32 @@ public class FakeLevel extends Level implements LightChunkGetter {
 	public void setDayTimePerTick(float dayTimePerTick) {
 		// TODO 自動生成されたメソッド・スタブ
 		
+	}
+
+	@Override
+	public int getSeaLevel() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public void explode(Entity pSource, DamageSource pDamageSource, ExplosionDamageCalculator pDamageCalculator,
+			double pX, double pY, double pZ, float pRadius, boolean pFire, ExplosionInteraction pExplosionInteraction,
+			ParticleOptions pSmallExplosionParticles, ParticleOptions pLargeExplosionParticles,
+			Holder<SoundEvent> pExplosionSound) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	@Override
+	public RecipeAccess recipeAccess() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public FuelValues fuelValues() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }

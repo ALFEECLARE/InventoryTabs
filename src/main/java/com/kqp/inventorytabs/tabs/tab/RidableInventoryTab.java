@@ -1,11 +1,11 @@
 package com.kqp.inventorytabs.tabs.tab;
 
-import com.kqp.inventorytabs.init.InventoryTabs;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.ClientInput;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Input;
 
 public class RidableInventoryTab extends SimpleEntityTab {
 
@@ -16,9 +16,11 @@ public class RidableInventoryTab extends SimpleEntityTab {
     @Override
     public void open() {
         if (!entity.hasPassenger(Minecraft.getInstance().player)) {
-        	Minecraft.getInstance().player.input.shiftKeyDown = true;
+        	ClientInput input = Minecraft.getInstance().player.input;
+        	boolean backupShiftStatus = input.keyPresses.shift(); 
+        	overwriteKeydownShift(input, true);
             super.open();
-            Minecraft.getInstance().player.input.shiftKeyDown = false;
+        	overwriteKeydownShift(input, backupShiftStatus);
             Minecraft.getInstance().getConnection().send(new ServerboundPlayerCommandPacket(Minecraft.getInstance().player, ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
         } else {
             super.open();
@@ -33,5 +35,10 @@ public class RidableInventoryTab extends SimpleEntityTab {
             }
         }
         return super.shouldBeRemoved();
+    }
+    
+    private void overwriteKeydownShift(ClientInput input, boolean shiftKeyStatus) {
+    	Input currentKeys = input.keyPresses; 
+    	input.keyPresses = new Input(currentKeys.forward(), currentKeys.backward(), currentKeys.left(), currentKeys.right(), currentKeys.jump(), shiftKeyStatus, currentKeys.sprint());
     }
 }
