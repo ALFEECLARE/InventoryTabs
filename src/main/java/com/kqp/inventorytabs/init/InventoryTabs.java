@@ -12,7 +12,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 @Mod(InventoryTabs.ID)
 public class InventoryTabs {
@@ -54,7 +54,7 @@ public class InventoryTabs {
         TabProviderRegistry.init("load");
     }
 
-    private void datapackReload(AddReloadListenerEvent event) {
+    private void datapackReload(AddServerReloadListenersEvent event) {
 //        TabProviderRegistry.init("reload"); //TODO: after datapacks are loaded
     }
 }

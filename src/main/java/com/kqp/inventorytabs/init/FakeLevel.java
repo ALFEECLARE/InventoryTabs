@@ -1,5 +1,6 @@
 package com.kqp.inventorytabs.init;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
@@ -54,6 +55,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.ScheduledTick;
+import net.neoforged.neoforge.entity.PartEntity;
 
 public class FakeLevel extends Level implements LightChunkGetter {
 
@@ -419,6 +421,12 @@ public class FakeLevel extends Level implements LightChunkGetter {
 
 	@Override
 	public FuelValues fuelValues() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public Collection<PartEntity<?>> dragonParts() {
 		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}

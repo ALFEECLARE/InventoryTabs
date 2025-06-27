@@ -10,10 +10,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -35,8 +36,8 @@ public class InventoryTabsClient {
         modEventBus.addListener(InventoryTabsClient::onReloadAssets);
     }
 
-    private static void onReloadAssets(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener((pPreparationBarrier, pResourceManager, pBackgroundExecutor, pGameExecutor) -> {
+    private static void onReloadAssets(AddClientReloadListenersEvent event) {
+        event.addListener(ResourceLocation.fromNamespaceAndPath(InventoryTabs.ID, "on_mod_loading"), (pPreparationBarrier, pResourceManager, pBackgroundExecutor, pGameExecutor) -> {
             return CompletableFuture.runAsync(InventoryTabsClient::reloadTabs, pGameExecutor).thenCompose(pPreparationBarrier::wait);
         });
     }
