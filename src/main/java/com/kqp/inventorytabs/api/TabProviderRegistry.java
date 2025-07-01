@@ -41,7 +41,7 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.vehicle.ChestBoat;
+import net.minecraft.world.entity.vehicle.AbstractChestBoat;
 import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.AbstractChestBlock;
 import net.minecraft.world.level.block.AbstractSkullBlock;
@@ -135,7 +135,7 @@ public class TabProviderRegistry {
             if (entity instanceof Container || entity instanceof InventoryCarrier || entity instanceof ContainerListener) {
                 if (entity instanceof Villager) {
                     registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), VillagerTab::new);
-                } else if (entity instanceof AbstractHorse || entity instanceof ChestBoat) {
+                } else if (entity instanceof AbstractHorse || entity instanceof AbstractChestBoat) {
                     registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), RidableInventoryTab::new);
                 } else if (!(entity instanceof Piglin) && !(entity instanceof Allay)) {
                     registerSimpleEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
