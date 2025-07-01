@@ -40,8 +40,7 @@ import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.InventoryCarrier;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.vehicle.ChestBoat;
+import net.minecraft.world.entity.vehicle.AbstractChestBoat;
 import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.AbstractChestBlock;
 import net.minecraft.world.level.block.AbstractSkullBlock;
@@ -77,6 +76,7 @@ import net.minecraft.world.level.block.piston.MovingPistonBlock;
  */
 public class TabProviderRegistry {
     private static final Logger LOGGER = LogManager.getLogger("InventoryTabs");
+    private static final List<EntityType> IGNORE_ENTITY_TYPE = List.of(EntityType.PAINTING, EntityType.WOLF, EntityType.CAT, EntityType.CHICKEN, EntityType.COW, EntityType.PIG, EntityType.FROG);
     private static final Map<ResourceLocation, TabProvider> TAB_PROVIDERS = new HashMap<>();
 
     public static final PlayerInventoryTabProvider PLAYER_INVENTORY_TAB_PROVIDER = register(
@@ -131,16 +131,18 @@ public class TabProviderRegistry {
         configAdd();
         var fakeLevel = new FakeLevel();
         BuiltInRegistries.ENTITY_TYPE.stream().filter(entityType -> !islllegalEntity(entityType)).forEach(entityType -> {
-            var entity = entityType.create(fakeLevel, EntitySpawnReason.NATURAL);
-            if (entity instanceof Container || entity instanceof InventoryCarrier || entity instanceof ContainerListener) {
-                if (entity instanceof Villager) {
-                    registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), VillagerTab::new);
-                } else if (entity instanceof AbstractHorse || entity instanceof ChestBoat) {
+        	if (entityType.equals(EntityType.VILLAGER)) {
+                registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), VillagerTab::new);
+        	} else {
+        		var entity = entityType.create(fakeLevel, EntitySpawnReason.NATURAL);
+                if (entity instanceof AbstractHorse || entity instanceof AbstractChestBoat) {
                     registerEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType), RidableInventoryTab::new);
-                } else if (!(entity instanceof Piglin) && !(entity instanceof Allay)) {
-                    registerSimpleEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
-                }
-            }
+                } else if (entity instanceof Container || entity instanceof InventoryCarrier || entity instanceof ContainerListener) {
+	                if (!(entity instanceof Piglin) && !(entity instanceof Allay)) {
+	                    registerSimpleEntity(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
+	                }
+	            }
+        	}
         });
 
         Minecraft client = Minecraft.getInstance();
@@ -150,7 +152,7 @@ public class TabProviderRegistry {
     }
 
     private static boolean islllegalEntity(EntityType entityType) {
-    	return entityType.equals(EntityType.PAINTING) || entityType.equals(EntityType.WOLF);
+    	return IGNORE_ENTITY_TYPE.contains(entityType);
     }
     
     private static void modCompatAdd() {

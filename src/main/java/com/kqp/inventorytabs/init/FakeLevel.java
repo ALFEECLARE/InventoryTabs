@@ -69,17 +69,17 @@ public class FakeLevel extends Level implements LightChunkGetter {
     }
 
     @Override
-    public void playSeededSound(@Nullable Player p_262953_, double p_263004_, double p_263398_, double p_263376_, Holder<SoundEvent> p_263359_, SoundSource p_263020_, float p_263055_, float p_262914_, long p_262991_) {
+    public void playSeededSound(@Nullable Entity p_262953_, double p_263004_, double p_263398_, double p_263376_, Holder<SoundEvent> p_263359_, SoundSource p_263020_, float p_263055_, float p_262914_, long p_262991_) {
 
     }
 
     @Override
-    public void playSeededSound(@Nullable Player pPlayer, double pX, double pY, double pZ, SoundEvent pSoundEvent, SoundSource pSoundSource, float pVolume, float pPitch, long pSeed) {
+    public void playSeededSound(@Nullable Entity pPlayer, double pX, double pY, double pZ, SoundEvent pSoundEvent, SoundSource pSoundSource, float pVolume, float pPitch, long pSeed) {
 
     }
 
     @Override
-    public void playSeededSound(@Nullable Player p_220372_, Entity p_220373_, Holder<SoundEvent> p_263500_, SoundSource p_220375_, float p_220376_, float p_220377_, long p_220378_) {
+    public void playSeededSound(@Nullable Entity p_220372_, Entity p_220373_, Holder<SoundEvent> p_263500_, SoundSource p_220375_, float p_220376_, float p_220377_, long p_220378_) {
 
     }
 
@@ -99,16 +99,6 @@ public class FakeLevel extends Level implements LightChunkGetter {
     @Override
     public MapItemSavedData getMapData(MapId pMapName) {
         return null;
-    }
-
-    @Override
-    public void setMapData(MapId pMapId, MapItemSavedData pData) {
-
-    }
-
-    @Override
-    public MapId getFreeMapId() {
-        return new MapId(0);
     }
 
     @Override
@@ -253,10 +243,6 @@ public class FakeLevel extends Level implements LightChunkGetter {
         };
     }
 
-    @Override
-    public void levelEvent(@Nullable Player pPlayer, int pType, @NotNull BlockPos pPos, int pData) {
-
-    }
 
     //gameEvent(@Nullable Entity pEntity, Holder<GameEvent> pGameEvent, Vec3 pPos) {
 
@@ -429,5 +415,11 @@ public class FakeLevel extends Level implements LightChunkGetter {
 	public Collection<PartEntity<?>> dragonParts() {
 		// TODO 自動生成されたメソッド・スタブ
 		return null;
+	}
+
+	@Override
+	public void levelEvent(Entity pEntity, int pType, BlockPos pPos, int pData) {
+		// TODO 自動生成されたメソッド・スタブ
+		
 	}
 }

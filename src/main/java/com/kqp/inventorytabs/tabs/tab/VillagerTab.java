@@ -18,7 +18,7 @@ public class VillagerTab extends SimpleEntityTab {
     @Override
     public boolean shouldBeRemoved() {
         if (entity instanceof Villager villager) {
-            if (villager.getVillagerData().getProfession().equals(VillagerProfession.NITWIT) || villager.getVillagerData().getProfession().equals(VillagerProfession.NONE)) {
+            if (villager.getVillagerData().profession().equals(VillagerProfession.NITWIT) || villager.getVillagerData().profession().equals(VillagerProfession.NONE)) {
                 return true;
             }
         }

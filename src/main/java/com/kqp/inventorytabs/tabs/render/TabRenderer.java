@@ -8,7 +8,10 @@ import com.kqp.inventorytabs.init.InventoryTabs;
 import com.kqp.inventorytabs.mixin.accessor.AbstractContainerScreenAccessor;
 import com.kqp.inventorytabs.tabs.TabManager;
 import com.kqp.inventorytabs.tabs.tab.Tab;
+import com.kqp.inventorytabs.util.RenderUtils;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -72,7 +75,7 @@ public class TabRenderer {
     }
 
     public void renderForeground(GuiGraphics gui, double mouseX, double mouseY) {
-        RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
+        //RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
 
         for (int i = 0; i < tabRenderInfos.length; i++) {
             TabRenderInfo tabRenderInfo = tabRenderInfos[i];
@@ -92,7 +95,7 @@ public class TabRenderer {
     private void drawButtons(GuiGraphics gui, double mouseX, double mouseY) {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
-        RenderSystem.setShaderTexture(0, BUTTONS_TEXTURE);
+        //RenderSystem.setShaderTexture(0, BUTTONS_TEXTURE);
 
         int width = ((AbstractContainerScreenAccessor) currentScreen).getImageWidth();
         int height = ((AbstractContainerScreenAccessor) currentScreen).getImageHeight();
@@ -127,12 +130,15 @@ public class TabRenderer {
             // TODO: Figure out rendering
 
             int color = 0xFFFFFFFF;
+    	    RenderPipeline usingPipeLine = RenderUtils.buildGuiPipeline("tabRender");
+    	    RenderSystem.AutoStorageIndexBuffer asBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+
 
             if (pageTextRefreshTime <= 20) {
                 //RenderSystem.disableTexture();
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.colorMask(true, true, true, true);
+                //RenderSystem.enableBlend();
+                //RenderSystem.defaultBlendFunc();
+                //RenderSystem.colorMask(true, true, true, true);
                 float transparency = pageTextRefreshTime / 20F;
 
                 color &= 0x00FFFFFF;
@@ -151,13 +157,16 @@ public class TabRenderer {
             int y = oY - 34;
 
             gui.drawString(font, text, x, y, color);
+
+            RenderUtils.renderIfExists(usingPipeLine, asBuffer);
         }
+        
     }
 
     private void renderTab(GuiGraphics gui, TabRenderInfo tabRenderInfo) {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
-        RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
+        //RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
         gui.blitSprite(RenderType.GUI_TEXTURED, getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
 
         tabRenderInfo.tabReference.renderTabIcon(gui, tabRenderInfo, currentScreen);

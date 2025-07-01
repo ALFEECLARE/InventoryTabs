@@ -1,5 +1,8 @@
 package com.kqp.inventorytabs.init;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.kqp.inventorytabs.api.TabProviderRegistry;
 
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +24,7 @@ public class InventoryTabs {
     public static boolean isBigInvLoaded;
     public static boolean isPlayerExLoaded;
     public static boolean isLevelzLoaded;
+    private static final Logger log = LogManager.getLogger(ID);
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(ID, path);
@@ -57,4 +61,10 @@ public class InventoryTabs {
     private void datapackReload(AddServerReloadListenersEvent event) {
 //        TabProviderRegistry.init("reload"); //TODO: after datapacks are loaded
     }
+
+    public static void log(String message) {
+    	if (log == null)
+    		return;
+    	log.info("[{}] {}", log.getName(), message);
+      }
 }
