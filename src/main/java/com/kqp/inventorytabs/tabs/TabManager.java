@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.kqp.inventorytabs.api.TabProviderRegistry;
-import com.kqp.inventorytabs.init.InventoryTabs;
 import com.kqp.inventorytabs.init.InventoryTabsClient;
 import com.kqp.inventorytabs.interf.TabManagerContainer;
 import com.kqp.inventorytabs.mixin.accessor.AbstractContainerScreenAccessor;
@@ -22,15 +21,16 @@ import com.kqp.inventorytabs.util.MouseUtil;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -99,20 +99,20 @@ public class TabManager {
         tabs.sort(Comparator.<Tab, Integer>comparing(o -> o instanceof SimpleEntityTab ? -1 : 1).thenComparing(Tab::getPriority).reversed().thenComparing(tab -> tab.getHoverText().getString()));
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 0) {
             int guiWidth = ((AbstractContainerScreenAccessor) currentScreen).getImageWidth();
             int guiHeight = ((AbstractContainerScreenAccessor) currentScreen).getImageHeight();
             int x = (currentScreen.width - guiWidth) / 2;
             int y = (currentScreen.height - guiHeight) / 2;
 
-            if (mouseX > x && mouseX < x + guiWidth && mouseY > y && mouseY < y + guiHeight) {
+            if (event.x() > x && event.x() < x + guiWidth && event.y() > y && event.y() < y + guiHeight) {
                 return false;
             }
 
             // Check back button
             if (new Rectangle(x - TabRenderer.BUTTON_WIDTH - 4 + ((TabRenderingHints) currentScreen).getTopRowXOffset(), y - 16, TabRenderer.BUTTON_WIDTH,
-                    TabRenderer.BUTTON_HEIGHT).contains(mouseX, mouseY)) {
+                    TabRenderer.BUTTON_HEIGHT).contains(event.x(), event.y())) {
                 if (canGoBackAPage()) {
                     setCurrentPage(currentPage - 1);
                     playClick();
@@ -123,7 +123,7 @@ public class TabManager {
 
             // Check forward button
             if (new Rectangle(x + guiWidth + 4 + ((TabRenderingHints) currentScreen).getTopRowXOffset(), y - 16, TabRenderer.BUTTON_WIDTH, TabRenderer.BUTTON_HEIGHT)
-                    .contains(mouseX, mouseY)) {
+                    .contains(event.x(), event.y())) {
                 if (canGoForwardAPage()) {
                     setCurrentPage(currentPage + 1);
                     playClick();
@@ -142,7 +142,7 @@ public class TabManager {
                         Rectangle rect = new Rectangle(tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW,
                                 tabRenderInfo.texH);
 
-                        if (rect.contains(mouseX, mouseY)) {
+                        if (rect.contains(event.x(), event.y())) {
                             onTabClick(tabRenderInfo.tabReference);
 
                             return true;
@@ -155,10 +155,10 @@ public class TabManager {
         return false;
     }
 
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (InventoryTabsClient.NEXT_TAB_KEY_BIND.matches(keyCode, scanCode)) {
+    public boolean keyPressed(KeyEvent event) {
+        if (InventoryTabsClient.NEXT_TAB_KEY_BIND.matches(event)) {
             int currentTabIndex = tabs.indexOf(currentTab);
-            if (Screen.hasShiftDown()) {
+            if (event.hasShiftDown()) {
                 if (currentTabIndex > 0) {
                     onTabClick(tabs.get(currentTabIndex - 1));
                 } else {
@@ -190,11 +190,11 @@ public class TabManager {
         // Try restore the cursor stack if it exists and wasn't dropped.
         if (manager!= null && this.prevCursorStackSlot != -1) {
             currentHandler.findSlot(player.getInventory(), this.prevCursorStackSlot).ifPresent((screenSlot) ->{
-                manager.handleInventoryMouseClick(
+                manager.handleContainerInput(
                         currentHandler.containerId,
                         screenSlot,
                         0, // Mouse Left Click
-                        ClickType.PICKUP,
+                        ContainerInput.PICKUP,
                         player
                 );
             });
@@ -226,11 +226,11 @@ public class TabManager {
                 if (this.prevCursorStackSlot != -1 && client.gameMode != null) {
                     // Put the cursor stack there
                     handler.findSlot(client.player.getInventory(), this.prevCursorStackSlot).ifPresent((screenSlot) -> {
-                        client.gameMode.handleInventoryMouseClick(
+                        client.gameMode.handleContainerInput(
                                 handler.containerId,
                                 screenSlot,
                                 InputConstants.MOUSE_BUTTON_LEFT,
-                                ClickType.PICKUP,
+                                ContainerInput.PICKUP,
                                 client.player
                         );
                     });

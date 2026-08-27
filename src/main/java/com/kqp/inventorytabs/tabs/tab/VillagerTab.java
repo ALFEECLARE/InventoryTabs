@@ -1,8 +1,8 @@
 package com.kqp.inventorytabs.tabs.tab;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 
 public class VillagerTab extends SimpleEntityTab {
 

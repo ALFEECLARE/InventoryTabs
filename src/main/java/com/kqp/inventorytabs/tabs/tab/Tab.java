@@ -4,7 +4,7 @@ import com.kqp.inventorytabs.mixin.accessor.ScreenAccessor;
 import com.kqp.inventorytabs.tabs.render.TabRenderInfo;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -66,11 +66,11 @@ public abstract class Tab {
      * @param currentScreen AbstractContainerScreen
      */
     @OnlyIn(Dist.CLIENT)
-    public void renderTabIcon(GuiGraphics gui, TabRenderInfo tabRenderInfo, AbstractContainerScreen<?> currentScreen) {
+    public void renderTabIcon(GuiGraphicsExtractor gui, TabRenderInfo tabRenderInfo, AbstractContainerScreen<?> currentScreen) {
         //ItemRenderer itemRenderer = ((ScreenAccessor) currentScreen).getItemRenderer();
         Font font = ((ScreenAccessor) currentScreen).getFont();
         // itemRenderer.blitOffset = 100.0F;
         // RenderSystem.enableRescaleNormal();
-        gui.renderItem(renderItemStack, tabRenderInfo.itemX, tabRenderInfo.itemY);
+        gui.item(renderItemStack, tabRenderInfo.itemX, tabRenderInfo.itemY);
     }
 }

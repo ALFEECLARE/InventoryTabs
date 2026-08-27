@@ -9,16 +9,14 @@ import com.kqp.inventorytabs.mixin.accessor.AbstractContainerScreenAccessor;
 import com.kqp.inventorytabs.tabs.TabManager;
 import com.kqp.inventorytabs.tabs.tab.Tab;
 import com.kqp.inventorytabs.util.RenderUtils;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.kqp.inventorytabs.util.RenderingChannelBuilder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -27,20 +25,20 @@ import net.neoforged.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class TabRenderer {
-    private static final ResourceLocation TABS_TEXTURE_FOR_SHADER = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/creative_inventory/tab_top_selected_1.png");
-    private static final ResourceLocation TABS_TOP_LEFT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_1");
-    private static final ResourceLocation TABS_TOP_MIDDLE_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_4");
-    private static final ResourceLocation TABS_TOP_RIGHT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_7");
-    private static final ResourceLocation TABS_BOTTOM_LEFT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_1");
-    private static final ResourceLocation TABS_BOTTOM_MIDDLE_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_4");
-    private static final ResourceLocation TABS_BOTTOM_RIGHT_SELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_7");
-    private static final ResourceLocation TABS_TOP_LEFT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_1");
-    private static final ResourceLocation TABS_TOP_MIDDLE_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_4");
-    private static final ResourceLocation TABS_TOP_RIGHT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_7");
-    private static final ResourceLocation TABS_BOTTOM_LEFT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_1");
-    private static final ResourceLocation TABS_BOTTOM_MIDDLE_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_4");
-    private static final ResourceLocation TABS_BOTTOM_RIGHT_UNSELECTED_TEXTURE = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_7");
-    private static final ResourceLocation BUTTONS_TEXTURE = InventoryTabs.id("textures/gui/buttons.png");
+    private static final Identifier TABS_TEXTURE_FOR_SHADER = Identifier.withDefaultNamespace("textures/gui/sprites/container/creative_inventory/tab_top_selected_1.png");
+    private static final Identifier TABS_TOP_LEFT_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_1");
+    private static final Identifier TABS_TOP_MIDDLE_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_4");
+    private static final Identifier TABS_TOP_RIGHT_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_7");
+    private static final Identifier TABS_BOTTOM_LEFT_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_1");
+    private static final Identifier TABS_BOTTOM_MIDDLE_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_4");
+    private static final Identifier TABS_BOTTOM_RIGHT_SELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_selected_7");
+    private static final Identifier TABS_TOP_LEFT_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_1");
+    private static final Identifier TABS_TOP_MIDDLE_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_4");
+    private static final Identifier TABS_TOP_RIGHT_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_7");
+    private static final Identifier TABS_BOTTOM_LEFT_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_1");
+    private static final Identifier TABS_BOTTOM_MIDDLE_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_4");
+    private static final Identifier TABS_BOTTOM_RIGHT_UNSELECTED_TEXTURE = Identifier.withDefaultNamespace("container/creative_inventory/tab_bottom_unselected_7");
+    private static final Identifier BUTTONS_TEXTURE = InventoryTabs.id("textures/gui/buttons.png");
 
     public static final int TAB_WIDTH = 26;
     public static final int TAB_HEIGHT = 32;
@@ -57,8 +55,8 @@ public class TabRenderer {
         this.tabManager = tabManager;
     }
 
-    public void renderBackground(GuiGraphics gui) {
-        gui.pose().pushPose();
+    public void renderBackground(GuiGraphicsExtractor gui) {
+        gui.pose().pushMatrix();
 
         tabRenderInfos = getTabRenderInfos();
 
@@ -71,10 +69,10 @@ public class TabRenderer {
                 }
             }
         }
-        gui.pose().popPose();
+        gui.pose().popMatrix();
     }
 
-    public void renderForeground(GuiGraphics gui, double mouseX, double mouseY) {
+    public void renderForeground(GuiGraphicsExtractor gui, double mouseX, double mouseY) {
         //RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
 
         for (int i = 0; i < tabRenderInfos.length; i++) {
@@ -92,7 +90,7 @@ public class TabRenderer {
         drawPageText(gui);
     }
 
-    private void drawButtons(GuiGraphics gui, double mouseX, double mouseY) {
+    private void drawButtons(GuiGraphicsExtractor gui, double mouseX, double mouseY) {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
         //RenderSystem.setShaderTexture(0, BUTTONS_TEXTURE);
@@ -111,7 +109,7 @@ public class TabRenderer {
         int u = 0;
         u += tabManager.canGoBackAPage() && hovered ? BUTTON_WIDTH * 2 : 0;
         int v = tabManager.canGoBackAPage() ? 0 : 13;
-        gui.blit(RenderType.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
+        gui.blit(RenderPipelines.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
 
         // Drawing forward button
         x = oX + width + 4;
@@ -122,17 +120,17 @@ public class TabRenderer {
         u = 15;
         u += tabManager.canGoForwardAPage() && hovered ? BUTTON_WIDTH * 2 : 0;
         v = tabManager.canGoForwardAPage() ? 0 : 13;
-        gui.blit(RenderType.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
+        gui.blit(RenderPipelines.GUI_TEXTURED, BUTTONS_TEXTURE, x, y, u, v, BUTTON_WIDTH, BUTTON_HEIGHT,BUTTON_WIDTH, BUTTON_HEIGHT, 256, 256);
     }
 
-    private void drawPageText(GuiGraphics gui) {
+    private void drawPageText(GuiGraphicsExtractor gui) {
         if (tabManager.getMaxPages() > 1 && pageTextRefreshTime > 0) {
             // TODO: Figure out rendering
 
             int color = 0xFFFFFFFF;
-    	    RenderPipeline usingPipeLine = RenderUtils.buildGuiPipeline("tabRender");
-    	    RenderSystem.AutoStorageIndexBuffer asBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-
+    	    //RenderPipeline usingPipeLine = RenderUtils.buildGuiPipeline("tabRender");
+    	    //RenderSystem.AutoStorageIndexBuffer asBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+    	    RenderingChannelBuilder builder = new RenderingChannelBuilder(RenderUtils.getColoredGuiRenderType("tabRender"));
 
             if (pageTextRefreshTime <= 20) {
                 //RenderSystem.disableTexture();
@@ -156,23 +154,24 @@ public class TabRenderer {
             int x = (oX - font.width(text)) / 2;
             int y = oY - 34;
 
-            gui.drawString(font, text, x, y, color);
+            gui.text(font, text, x, y, color);
 
-            RenderUtils.renderIfExists(usingPipeLine, asBuffer);
+            //RenderUtils.renderIfExists(usingPipeLine, asBuffer);
+            builder.closeChannel();
         }
         
     }
 
-    private void renderTab(GuiGraphics gui, TabRenderInfo tabRenderInfo) {
+    private void renderTab(GuiGraphicsExtractor gui, TabRenderInfo tabRenderInfo) {
         AbstractContainerScreen<?> currentScreen = tabManager.getCurrentScreen();
 
         //RenderSystem.setShaderTexture(0, TABS_TEXTURE_FOR_SHADER);
-        gui.blitSprite(RenderType.GUI_TEXTURED, getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
+        gui.blitSprite(RenderPipelines.GUI_TEXTURED, getRendarTabTexture(tabRenderInfo), tabRenderInfo.x, tabRenderInfo.y, tabRenderInfo.texW, tabRenderInfo.texH);
 
         tabRenderInfo.tabReference.renderTabIcon(gui, tabRenderInfo, currentScreen);
     }
 
-    public void renderHoverTooltips(GuiGraphics gui, double mouseX, double mouseY) {
+    public void renderHoverTooltips(GuiGraphicsExtractor gui, double mouseX, double mouseY) {
         for (int i = 0; i < tabRenderInfos.length; i++) {
             TabRenderInfo tabRenderInfo = tabRenderInfos[i];
 
@@ -180,7 +179,7 @@ public class TabRenderer {
                 Rectangle itemRec = new Rectangle(tabRenderInfo.itemX, tabRenderInfo.itemY, 16, 16);
 
                 if (itemRec.contains(mouseX, mouseY)) {
-                    gui.renderTooltip(Minecraft.getInstance().font, tabRenderInfo.tabReference.getHoverText(),
+                    gui.setTooltipForNextFrame(Minecraft.getInstance().font, tabRenderInfo.tabReference.getHoverText(),
                             (int) mouseX, (int) mouseY);
                 }
             }
@@ -323,7 +322,7 @@ public class TabRenderer {
         return tabRenderInfo;
     }
     
-    private ResourceLocation getRendarTabTexture(TabRenderInfo renderinfo) {
+    private Identifier getRendarTabTexture(TabRenderInfo renderinfo) {
     	if (renderinfo.selected) {
         	if (renderinfo.topRow) {
         		return switch(renderinfo.renderPattern) {

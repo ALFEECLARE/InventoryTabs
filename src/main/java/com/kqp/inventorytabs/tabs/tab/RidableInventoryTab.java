@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.ClientInput;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Input;
 
 public class RidableInventoryTab extends SimpleEntityTab {
@@ -21,7 +21,7 @@ public class RidableInventoryTab extends SimpleEntityTab {
         	overwriteKeydownShift(input, true);
             super.open();
         	overwriteKeydownShift(input, backupShiftStatus);
-            Minecraft.getInstance().getConnection().send(new ServerboundPlayerCommandPacket(Minecraft.getInstance().player, ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
+            Minecraft.getInstance().getConnection().send(new ServerboundPlayerCommandPacket(Minecraft.getInstance().player, ServerboundPlayerCommandPacket.Action.OPEN_INVENTORY));
         } else {
             super.open();
         }

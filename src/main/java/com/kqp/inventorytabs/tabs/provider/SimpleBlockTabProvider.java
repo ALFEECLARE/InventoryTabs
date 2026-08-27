@@ -9,7 +9,7 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * Provides tabs for simple blocks.
  */
 public class SimpleBlockTabProvider extends BlockTabProvider {
-    private final Set<ResourceLocation> blockIds = new HashSet<>();
+    private final Set<Identifier> blockIds = new HashSet<>();
 
     public SimpleBlockTabProvider() {
     }
@@ -27,7 +27,7 @@ public class SimpleBlockTabProvider extends BlockTabProvider {
         blockIds.add(BuiltInRegistries.BLOCK.getKey(block));
     }
 
-    public void addBlock(ResourceLocation ResourceLocation) {
+    public void addBlock(Identifier ResourceLocation) {
         blockIds.add(ResourceLocation);
     }
 
@@ -35,11 +35,11 @@ public class SimpleBlockTabProvider extends BlockTabProvider {
         blockIds.remove(BuiltInRegistries.BLOCK.getKey(block));
     }
 
-    public void removeBlock(ResourceLocation ResourceLocation) {
+    public void removeBlock(Identifier ResourceLocation) {
         blockIds.remove(ResourceLocation);
     }
 
-    public Set<ResourceLocation> getBlockIds() {
+    public Set<Identifier> getBlockIds() {
         return this.blockIds;
     }
 

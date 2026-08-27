@@ -10,13 +10,13 @@ import com.kqp.inventorytabs.tabs.render.TabRenderInfo;
 import com.kqp.inventorytabs.util.ChestUtil;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,7 +30,7 @@ public class ChestTab extends SimpleBlockTab {
     ItemStack itemStack;
     private final Minecraft mc = Minecraft.getInstance();
 
-    public ChestTab(ResourceLocation blockId, BlockPos blockPos) {
+    public ChestTab(Identifier blockId, BlockPos blockPos) {
         super(blockId, blockPos);
         this.itemStack = new ItemStack(BuiltInRegistries.BLOCK.get(blockId).get().value());
     }
@@ -52,12 +52,12 @@ public class ChestTab extends SimpleBlockTab {
     }
 
     @Override
-    public void renderTabIcon(GuiGraphics gui, TabRenderInfo tabRenderInfo, AbstractContainerScreen<?> currentScreen) {
+    public void renderTabIcon(GuiGraphicsExtractor gui, TabRenderInfo tabRenderInfo, AbstractContainerScreen<?> currentScreen) {
         itemStack = getItemFrame();
         //ItemRenderer itemRenderer = ((ScreenAccessor) currentScreen).getItemRenderer();
         //Font textRenderer = ((ScreenAccessor) currentScreen).getFont();
         //gui.blitOffset = 100.0F;
-        gui.renderItem(itemStack, tabRenderInfo.itemX, tabRenderInfo.itemY);
+        gui.item(itemStack, tabRenderInfo.itemX, tabRenderInfo.itemY);
         //gui.renderItemDecorations(textRenderer, itemStack, tabRenderInfo.itemX, tabRenderInfo.itemY);
         //itemRenderer.blitOffset = 0.0F;
     }

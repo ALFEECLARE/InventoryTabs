@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.kqp.inventorytabs.api.TabProviderRegistry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -26,8 +26,8 @@ public class InventoryTabs {
     public static boolean isLevelzLoaded;
     private static final Logger log = LogManager.getLogger(ID);
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(ID, path);
     }
 
     public InventoryTabs(IEventBus modEventBus, ModContainer modContainer) {
@@ -44,7 +44,7 @@ public class InventoryTabs {
         NeoForge.EVENT_BUS.addListener(this::playerJoin);
         NeoForge.EVENT_BUS.addListener(this::datapackReload);
 
-        if (FMLLoader.getDist().isClient()) {
+        if (FMLLoader.getCurrent().getDist().isClient()) {
             InventoryTabsClient.init(modEventBus, modContainer);
         }
     }

@@ -8,15 +8,16 @@ import com.kqp.inventorytabs.util.EntityUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.EntityHitResult;
 
 public class SimpleEntityTab extends Tab {
-    public final ResourceLocation entityId;
+    public final Identifier entityId;
     public final Entity entity;
 
     public SimpleEntityTab(Entity entity) {
@@ -28,7 +29,7 @@ public class SimpleEntityTab extends Tab {
     @Override
     public void open() {
         AbstractClientPlayer player = Minecraft.getInstance().player;
-        Minecraft.getInstance().gameMode.interact(player, entity, player.getUsedItemHand());
+        Minecraft.getInstance().gameMode.interact(player, entity, new EntityHitResult(entity), player.getUsedItemHand());
     }
 
     @Override

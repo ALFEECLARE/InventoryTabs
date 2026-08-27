@@ -9,12 +9,12 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public class SimpleEntityTabProvider extends EntityTabProvider {
-    private final Set<ResourceLocation> entityIds = new HashSet<>();
+    private final Set<Identifier> entityIds = new HashSet<>();
 
     public SimpleEntityTabProvider() {
     }
@@ -36,7 +36,7 @@ public class SimpleEntityTabProvider extends EntityTabProvider {
         return entityIds.contains(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
     }
 
-    public void addEntity(ResourceLocation entityId) {
+    public void addEntity(Identifier entityId) {
         entityIds.add(entityId);
     }
 

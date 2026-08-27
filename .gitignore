@@ -32,3 +32,5 @@ run/
 /wrapper/
 /native/
 .tmp/
+jdks
+runs

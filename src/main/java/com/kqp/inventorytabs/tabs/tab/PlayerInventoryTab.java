@@ -48,7 +48,7 @@ public class PlayerInventoryTab extends Tab {
 
     private static ItemStack getRenderItemStack() {
         ItemStack itemStack = new ItemStack(Blocks.PLAYER_HEAD);
-        itemStack.set(DataComponents.PROFILE, new ResolvableProfile(Minecraft.getInstance().player.getGameProfile()));
+        itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(Minecraft.getInstance().player.getGameProfile()));
         return itemStack;
     }
 }

@@ -10,12 +10,12 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryTabProvider implements TabProvider {
-    private static final Set<ResourceLocation> inventoryItems = new HashSet<>();
+    private static final Set<Identifier> inventoryItems = new HashSet<>();
 
     @Override
     public void addAvailableTabs(AbstractClientPlayer player, List<Tab> tabs) {
@@ -30,11 +30,11 @@ public class InventoryTabProvider implements TabProvider {
         }
     }
 
-    public void addItem(ResourceLocation blockId) {
+    public void addItem(Identifier blockId) {
         inventoryItems.add(blockId);
     }
 
-    public Set<ResourceLocation> getItemIds() {
+    public Set<Identifier> getItemIds() {
         return inventoryItems;
     }
 

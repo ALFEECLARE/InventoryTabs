@@ -10,7 +10,7 @@ import com.kqp.inventorytabs.interf.TabManagerContainer;
 import com.kqp.inventorytabs.tabs.TabManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CartographyTableScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -18,8 +18,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 @Mixin(CartographyTableScreen.class)
 public class CartographyTableScreenTabAdder {
-    @Inject(method = "renderBg", at = @At(value = "HEAD"))
-    protected void drawBackgroundTabs(GuiGraphics gui, float delta, int mouseX, int mouseY,
+    @Inject(method = "extractBackground", at = @At(value = "HEAD"))
+    protected void drawBackgroundTabs(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta,
                                       CallbackInfo callbackInfo) {
         if (InventoryTabsClient.shouldRenderTabs((CartographyTableScreen)(Object)this)) {
             Minecraft client = Minecraft.getInstance();

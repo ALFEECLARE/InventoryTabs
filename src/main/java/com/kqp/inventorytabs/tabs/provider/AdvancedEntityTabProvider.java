@@ -11,11 +11,11 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 
 public class AdvancedEntityTabProvider extends EntityTabProvider {
-    private final Map<ResourceLocation, TabFactory> entityMap = new HashMap<>();
+    private final Map<Identifier, TabFactory> entityMap = new HashMap<>();
 
     @Override
     public void addAvailableTabs(AbstractClientPlayer player, List<Tab> tabs) {
@@ -38,7 +38,7 @@ public class AdvancedEntityTabProvider extends EntityTabProvider {
         return entityMap.get(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).createTab(entity);
     }
 
-    public boolean addEntity(ResourceLocation key, TabFactory factory) {
+    public boolean addEntity(Identifier key, TabFactory factory) {
         return entityMap.putIfAbsent(key, factory) == null;
     }
 

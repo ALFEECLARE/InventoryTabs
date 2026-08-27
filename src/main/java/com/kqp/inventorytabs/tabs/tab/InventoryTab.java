@@ -37,6 +37,6 @@ public class InventoryTab extends Tab {
 
     @Override
     public Component getHoverText() {
-        return Component.literal(item.getName().getString());
+        return Component.literal(item.getName(new ItemStack(item)).getString());
     }
 }

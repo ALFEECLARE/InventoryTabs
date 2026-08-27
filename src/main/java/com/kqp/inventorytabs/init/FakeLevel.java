@@ -14,15 +14,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ExplosionParticleInfo;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.AbortableIterationConsumer;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.TickRateManager;
+import net.minecraft.world.attribute.EnvironmentAttributeSystem;
+import net.minecraft.world.clock.ClockManager;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -37,6 +41,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.LightChunk;
@@ -49,6 +54,8 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.world.level.storage.LevelData.RespawnData;
 import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -60,7 +67,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 public class FakeLevel extends Level implements LightChunkGetter {
 
     public FakeLevel() {
-        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, ResourceLocation.withDefaultNamespace("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), true, false, 91247917248L, 0);
+        super(new FakeWritableLevelData(), ResourceKey.create(Registries.DIMENSION, Identifier.withDefaultNamespace("overworld")), Minecraft.getInstance().level.registryAccess(), Minecraft.getInstance().level.dimensionTypeRegistration(), true, false, 91247917248L, 0);
     }
 
     @Override
@@ -263,7 +270,7 @@ public class FakeLevel extends Level implements LightChunkGetter {
         return Minecraft.getInstance().level.enabledFeatures();
     }
 
-    @Override
+    //@Override
     public float getShade(@NotNull Direction pDirection, boolean pShade) {
         return 0;
     }
@@ -295,41 +302,41 @@ public class FakeLevel extends Level implements LightChunkGetter {
     static class FakeWritableLevelData implements WritableLevelData {
 
     	@Override
-    	public void setSpawn(BlockPos pSpawnPoint, float pSpawnAngle) {
+    	public void setSpawn(LevelData.RespawnData respawnData) {
     	}
 
     	public BlockPos getSpawnPos() {
     		return new BlockPos(0,0,0);
     	}
 
-        @Override
-        public float getSpawnAngle() {
-            return 0;
-        }
+        //@Override
+        //public float getSpawnAngle() {
+        //    return 0;
+        //}
 
         @Override
         public long getGameTime() {
             return 0;
         }
 
-        @Override
-        public long getDayTime() {
-            return 0;
-        }
+        //@Override
+        //public long getDayTime() {
+        //    return 0;
+        //}
 
-        @Override
-        public boolean isThundering() {
-            return false;
-        }
+        //@Override
+        //public boolean isThundering() {
+        //    return false;
+        //}
 
-        @Override
-        public boolean isRaining() {
-            return false;
-        }
+        //@Override
+        //public boolean isRaining() {
+        //    return false;
+        //}
 
-        @Override
-        public void setRaining(boolean pRaining) {
-        }
+        //@Override
+        //public void setRaining(boolean pRaining) {
+        //}
 
         @Override
         public boolean isHardcore() {
@@ -346,6 +353,11 @@ public class FakeLevel extends Level implements LightChunkGetter {
         public boolean isDifficultyLocked() {
             return false;
         }
+
+		@Override
+		public RespawnData getRespawnData() {
+			return null;
+		}
     }
 
 	@Override
@@ -360,29 +372,29 @@ public class FakeLevel extends Level implements LightChunkGetter {
 		return null;
 	}
 
-	@Override
-	public void setDayTimeFraction(float dayTimeFraction) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+	//@Override
+	//public void setDayTimeFraction(float dayTimeFraction) {
+	//	// TODO 自動生成されたメソッド・スタブ
+	//	
+	//}
 
-	@Override
-	public float getDayTimeFraction() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
-	}
+	//@Override
+	//public float getDayTimeFraction() {
+	//	// TODO 自動生成されたメソッド・スタブ
+	//	return 0;
+	//}
 
-	@Override
-	public float getDayTimePerTick() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
-	}
+	//@Override
+	//public float getDayTimePerTick() {
+	//	// TODO 自動生成されたメソッド・スタブ
+	//	return 0;
+	//}
 
-	@Override
-	public void setDayTimePerTick(float dayTimePerTick) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+	//@Override
+	//public void setDayTimePerTick(float dayTimePerTick) {
+	//	// TODO 自動生成されたメソッド・スタブ
+	//	
+	//}
 
 	@Override
 	public int getSeaLevel() {
@@ -390,14 +402,14 @@ public class FakeLevel extends Level implements LightChunkGetter {
 		return 0;
 	}
 
-	@Override
-	public void explode(Entity pSource, DamageSource pDamageSource, ExplosionDamageCalculator pDamageCalculator,
-			double pX, double pY, double pZ, float pRadius, boolean pFire, ExplosionInteraction pExplosionInteraction,
-			ParticleOptions pSmallExplosionParticles, ParticleOptions pLargeExplosionParticles,
-			Holder<SoundEvent> pExplosionSound) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+	//@Override
+	//public void explode(Entity pSource, DamageSource pDamageSource, ExplosionDamageCalculator pDamageCalculator,
+	//		double pX, double pY, double pZ, float pRadius, boolean pFire, ExplosionInteraction pExplosionInteraction,
+	//		ParticleOptions pSmallExplosionParticles, ParticleOptions pLargeExplosionParticles,
+	//		Holder<SoundEvent> pExplosionSound) {
+	//	// TODO 自動生成されたメソッド・スタブ
+	//	
+	//}
 
 	@Override
 	public RecipeAccess recipeAccess() {
@@ -421,5 +433,46 @@ public class FakeLevel extends Level implements LightChunkGetter {
 	public void levelEvent(Entity pEntity, int pType, BlockPos pPos, int pData) {
 		// TODO 自動生成されたメソッド・スタブ
 		
+	}
+
+	@Override
+	public WorldBorder getWorldBorder() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public void explode(@org.jspecify.annotations.Nullable Entity source,
+			@org.jspecify.annotations.Nullable DamageSource damageSource,
+			@org.jspecify.annotations.Nullable ExplosionDamageCalculator damageCalculator, double x, double y, double z,
+			float r, boolean fire, ExplosionInteraction interactionType, ParticleOptions smallExplosionParticles,
+			ParticleOptions largeExplosionParticles, WeightedList<ExplosionParticleInfo> blockParticles,
+			Holder<SoundEvent> explosionSound) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	@Override
+	public void setRespawnData(RespawnData respawnData) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	@Override
+	public RespawnData getRespawnData() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public ClockManager clockManager() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public EnvironmentAttributeSystem environmentAttributes() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }

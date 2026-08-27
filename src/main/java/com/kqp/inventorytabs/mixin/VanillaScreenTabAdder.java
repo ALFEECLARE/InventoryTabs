@@ -20,7 +20,7 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 import com.kqp.inventorytabs.util.ChestUtil;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -31,6 +31,8 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.ChestBlock;
@@ -124,22 +126,10 @@ public abstract class VanillaScreenTabAdder extends Screen implements TabRenderi
         }
     }
 
-    @Inject(method = "render", at = @At("HEAD"))
-    protected void drawBackgroundTabs(GuiGraphics gui, int mouseX, int mouseY, float delta,
-            CallbackInfo callbackInfo) {
-        if (InventoryTabsClient.shouldRenderTabs(this)) {
-            if (!screenDoesDumbBlock()) {
-                TabManager tabManager = TabManager.getInstance();
-
-                tabManager.tabRenderer.renderBackground(gui);
-            }
-        }
-    }
-
-    @Inject(method = "render", at = @At("TAIL"))
-    protected void drawForegroundTabs(GuiGraphics gui, int mouseX, int mouseY, float delta,
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    protected void drawForegroundTabs(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta,
                                       CallbackInfo callbackInfo) {
-        if (InventoryTabsClient.shouldRenderTabs(this)) {
+        if (InventoryTabsClient.shouldRenderTabs((Screen)((Object)this))) {
             TabManager tabManager = TabManager.getInstance();
 
             tabManager.tabRenderer.renderForeground(gui, mouseX, mouseY);
@@ -148,26 +138,26 @@ public abstract class VanillaScreenTabAdder extends Screen implements TabRenderi
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> callbackInfo) {
+    public void mouseClicked(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> callbackInfo) {
         if (InventoryTabsClient.shouldRenderTabs(this)) {
             TabManager tabManager = TabManager.getInstance();
 
-            if (tabManager.mouseClicked(mouseX, mouseY, button)) {
+            if (tabManager.mouseClicked(event, doubleClick)) {
                 callbackInfo.setReturnValue(true);
             }
         }
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> callbackInfo) {
-        var disableKeyMatches = InventoryTabsClient.DISABLE_TABS_KEY_BIND.matches(keyCode, scanCode);
+    public void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> callbackInfo) {
+        boolean disableKeyMatches = InventoryTabsClient.DISABLE_TABS_KEY_BIND.matches(event);
         if (disableKeyMatches) {
             InventoryTabsConfig.renderTabs.set(!InventoryTabsConfig.renderTabs.get());
         }
         if (InventoryTabsClient.shouldRenderTabs(this)) {
             TabManager tabManager = TabManager.getInstance();
 
-            if (tabManager.keyPressed(keyCode, scanCode, modifiers)) {
+            if (tabManager.keyPressed(event)) {
                 callbackInfo.setReturnValue(true);
             }
         }
@@ -205,7 +195,7 @@ public abstract class VanillaScreenTabAdder extends Screen implements TabRenderi
         return screenNeedsOffset() ? -1 : 0;
     }
     
-    private boolean screenDoesDumbBlock() {
+    protected boolean screenDoesDumbBlock() {
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
 
         return screen instanceof CartographyTableScreen || screen instanceof LoomScreen

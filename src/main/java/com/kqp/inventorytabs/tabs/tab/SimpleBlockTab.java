@@ -11,10 +11,11 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,10 +27,10 @@ import net.minecraft.world.phys.Vec3;
  * Generic tab for blocks.
  */
 public class SimpleBlockTab extends Tab {
-    public final ResourceLocation blockId;
+    public final Identifier blockId;
     public final BlockPos blockPos;
 
-    public SimpleBlockTab(ResourceLocation blockId, BlockPos blockPos) {
+    public SimpleBlockTab(Identifier blockId, BlockPos blockPos) {
         super(new ItemStack(Minecraft.getInstance().level.getBlockState(blockPos).getBlock()));
         this.blockId = blockId;
         this.blockPos = blockPos;
@@ -85,10 +86,11 @@ public class SimpleBlockTab extends Tab {
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
         if (blockEntity != null) {
-            CompoundTag tag = blockEntity.saveWithoutMetadata(world.registryAccess());
-
-            if (tag.contains("CustomName")) {
-                return Component.Serializer.fromJson(tag.getString("CustomName").get(),world.registryAccess());
+            //CompoundTag tag = blockEntity.saveWithoutMetadata(world.registryAccess());
+        	DataComponentMap components = blockEntity.components();
+            //if (tag.contains("CustomName")) {
+        	if (components.has(DataComponents.CUSTOM_NAME)) {
+                return blockEntity.components().get(DataComponents.CUSTOM_NAME);
             }
         }
 

@@ -1,4 +1,5 @@
 {
+  "key.category.inventorytabs.key.categories.inventory": "Inventory Tabs",
   "text.autoconfig.inventory_tabs.title": "Inventory Tabs Config",
   "text.autoconfig.inventory_tabs.option.doSightChecksFlag": "Check if block is in line of sight",
   "text.autoconfig.inventory_tabs.option.doSightChecksFlag.@Tooltip": "If §cNo§r, you are able to click on inventories through walls",

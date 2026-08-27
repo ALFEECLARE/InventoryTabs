@@ -10,7 +10,7 @@ import com.kqp.inventorytabs.tabs.tab.Tab;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
@@ -18,12 +18,12 @@ import net.minecraft.world.level.block.Block;
  * Provides tabs for blocks that should only have one tab at a time (e.g. Crafting Tables).
  **/
 public class UniqueTabProvider extends BlockTabProvider {
-    private final Set<ResourceLocation> uniqueBlocks = new HashSet<>();
+    private final Set<Identifier> uniqueBlocks = new HashSet<>();
 
     @Override
     public void addAvailableTabs(AbstractClientPlayer player, List<Tab> tabs) {
         super.addAvailableTabs(player, tabs);
-        Set<ResourceLocation> tabsToRemove = new HashSet<>();
+        Set<Identifier> tabsToRemove = new HashSet<>();
         List<SimpleBlockTab> craftingTableTabs = tabs.stream().filter(tab -> tab instanceof SimpleBlockTab).map(tab -> (SimpleBlockTab) tab)
                 .filter(tab -> uniqueBlocks.contains(tab.blockId)).toList();
 
@@ -38,11 +38,11 @@ public class UniqueTabProvider extends BlockTabProvider {
         uniqueBlocks.add(BuiltInRegistries.BLOCK.getKey(block));
     }
 
-    public void addUniqueBlock(ResourceLocation blockId) {
+    public void addUniqueBlock(Identifier blockId) {
         uniqueBlocks.add(blockId);
     }
 
-    public void removeUniqueBlockId(ResourceLocation blockId) {
+    public void removeUniqueBlockId(Identifier blockId) {
         uniqueBlocks.remove(blockId);
     }
     @Override

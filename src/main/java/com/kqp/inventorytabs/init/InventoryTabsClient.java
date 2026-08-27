@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
@@ -20,11 +20,13 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class InventoryTabsClient {
+	public static final KeyMapping.Category INVENTORY_TABS_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(InventoryTabs.ID, "key.categories.inventory"));
+
     public static final KeyMapping NEXT_TAB_KEY_BIND = new KeyMapping(
-            "inventorytabs.key.next_tab", InputConstants.Type.KEYSYM, InputConstants.KEY_TAB, "key.categories.inventory");
+            "inventorytabs.key.next_tab", InputConstants.Type.KEYSYM, InputConstants.KEY_TAB, INVENTORY_TABS_CATEGORY);
 
     public static final KeyMapping DISABLE_TABS_KEY_BIND = new KeyMapping(
-            "inventorytabs.key.disable_tabs", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), "key.categories.inventory");
+            "inventorytabs.key.disable_tabs", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), INVENTORY_TABS_CATEGORY);
 
     public static boolean serverDoSightCheckFlag = true;
 
@@ -37,7 +39,7 @@ public class InventoryTabsClient {
     }
 
     private static void onReloadAssets(AddClientReloadListenersEvent event) {
-        event.addListener(ResourceLocation.fromNamespaceAndPath(InventoryTabs.ID, "on_mod_loading"), (pPreparationBarrier, pResourceManager, pBackgroundExecutor, pGameExecutor) -> {
+        event.addListener(Identifier.fromNamespaceAndPath(InventoryTabs.ID, "on_mod_loading"), (pSharedState, pTaskExecutor, pPreparationBarrier, pGameExecutor) -> {
             return CompletableFuture.runAsync(InventoryTabsClient::reloadTabs, pGameExecutor).thenCompose(pPreparationBarrier::wait);
         });
     }
@@ -65,7 +67,7 @@ public class InventoryTabsClient {
     }
 
     private static void onKeyPressed(InputEvent.Key event) {
-        if (DISABLE_TABS_KEY_BIND.matches(event.getKey(), event.getScanCode())) {
+        if (DISABLE_TABS_KEY_BIND.matches(event.getKeyEvent())) {
             InventoryTabsConfig.renderTabs.set(DISABLE_TABS_KEY_BIND.consumeClick() != InventoryTabsConfig.renderTabs.get());
         }
     }
