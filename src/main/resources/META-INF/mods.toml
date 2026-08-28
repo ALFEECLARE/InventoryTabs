@@ -7,7 +7,7 @@ modId="inventorytabs"
 version="${file.jarVersion}"
 displayName="Inventory Tabs"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/inventory-tabs-forge"
-logoFile="icon_neo.png"
+logoFile="icon.png"
 authors="KQP, LiamMCW, Andrew6rant (Andrew Grant), Dhyces"
 description='''
 Adds tabs to your inventory that lead to nearby blocks.
